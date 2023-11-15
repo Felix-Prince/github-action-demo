@@ -43,7 +43,7 @@ function App() {
     setFirst(first + 1)
     setFirst(first + 1)
     setFirst(first + 1)
-    // setText('xxxxxx' + x)
+    setText('xxxxxx' + x)
   }
 
   return (
@@ -57,10 +57,10 @@ function App() {
 
 export default App
 
-export const fn = (cb?: () => void) => {
-  console.log('---fn---')
-  cb?.()
-}
+// export const fn = (cb?: () => void) => {
+//   console.log('---fn---')
+//   cb?.()
+// }
 
 // document.addEventListener('DOMContentLoaded', () => {
 //   console.log('---DOMContentLoaded---')
