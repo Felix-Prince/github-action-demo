@@ -10,10 +10,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Build and Deploy
-      uses: JamesIves/github-pages-deploy-action@dev
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
-        BUILD_SCRIPT: npm install && npm run build
+    - name: Install and Build 
+      run: |
+        npm install
+        npm run build
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4.4.3
+      with:
+        folder: build
+          
