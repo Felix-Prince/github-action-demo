@@ -1,7 +1,6 @@
 import React from 'react'
-import { fn } from './App'
 
-const Child = ({ cb }: any) => {
+const Child = () => {
   // console.log('---run child---')
   return <div>33333</div>
 }
