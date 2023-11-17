@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        height: 500px;
+        background: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // 假如父元素是body
+      const ele = document.body
+      const canvas = document.createElement('canvas')
+      canvas.width = ele.clientWidth
+      canvas.height = ele.clientHeight
+      const ctx = canvas.getContext('2d') // 得到渲染上下文
+      const width = ele.clientWidth
+      const height = ele.clientHeight
+      const rate = width / 10000
+      const distance = width / 10
+
+      // 将canvas标签插入
+      ele.appendChild(canvas)
+      const points = []
+      // 随机生成点的坐标，需指定radius的最大值
+      function getPoint(radius = 2) {
+        const x = Math.ceil(Math.random() * width), // 粒子的x坐标
+          y = Math.ceil(Math.random() * height), // 粒子的y坐标
+          r = +(Math.random() * radius).toFixed(4), // 粒子的半径
+          rateX = +(Math.random() * 2 - 1).toFixed(4), // 粒子在x方向运动的速率
+          rateY = +(Math.random() * 2 - 1).toFixed(4) // 粒子在y方向运动的速率
+
+        return { x, y, r, rateX, rateY }
+      }
+
+      // 随机生成100个点的坐标信息
+      for (let i = 0; i < 100; i++) {
+        points.push(getPoint())
+      }
+      console.log(points)
+
+      function drawPoints() {
+        points.forEach((item, i) => {
+          ctx.beginPath()
+          ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2, false)
+          ctx.fillStyle = '#fff'
+          ctx.fill()
+          // 根据rateX和rateY移动点的坐标
+          if (item.x > 0 && item.x < width && item.y > 0 && item.y < height) {
+            item.x += item.rateX * rate
+            item.y += item.rateY * rate
+          } else {
+            // 如果粒子运动超出了边界，将这个粒子去除，同时重新生成一个新点。
+            points.splice(i, 1)
+            points.push(getPoint())
+          }
+        })
+      }
+
+      // 计算两点之间的距离
+      function dis(x1, y1, x2, y2) {
+        var disX = Math.abs(x1 - x2),
+          disY = Math.abs(y1 - y2)
+
+        // 勾股定理
+        return Math.sqrt(disX * disX + disY * disY)
+      }
+
+      function drawLines() {
+        const len = points.length
+        //对圆心坐标进行两两判断
+        for (let i = 0; i < len; i++) {
+          for (let j = len - 1; j >= 0; j--) {
+            const x1 = points[i].x,
+              y1 = points[i].y,
+              x2 = points[j].x,
+              y2 = points[j].y,
+              disPoint = dis(x1, y1, x2, y2)
+
+            // 如果两点之间距离小于150，画线
+            if (disPoint <= 150) {
+              ctx.beginPath()
+              ctx.moveTo(x1, y1)
+              ctx.lineTo(x2, y2)
+              ctx.strokeStyle = '#fff'
+              //两点之间距离越大，线越细，反之亦然
+              ctx.lineWidth = 1 - disPoint / distance
+              ctx.stroke()
+            }
+          }
+        }
+      }
+
+      // 调用draw函数开启动画
+      ;(function draw() {
+        ctx.clearRect(0, 0, width, height)
+        drawPoints()
+        // 如果不需要画线，取消下面这行代码即可。
+        drawLines()
+        // console.log(points)
+        window.requestAnimationFrame(draw)
+      })()
+    </script>
+  </body>
+</html>
